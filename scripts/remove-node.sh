@@ -1,6 +1,6 @@
 #!/bin/bash
 # remove-node.sh
-# Safely drains and removes a worker node, then destroys its VM via Terraform.
+# Safely drains and removes a worker node, then terminates its EC2 instance via Terraform.
 # Usage: ./remove-node.sh <node-name> <new_worker_count>
 
 set -euo pipefail
@@ -22,7 +22,7 @@ kubectl drain "${NODE_NAME}" \
 echo "==> [3/4] Deleting node from cluster..."
 kubectl delete node "${NODE_NAME}"
 
-echo "==> [4/4] Scaling down Terraform to ${NEW_COUNT} workers..."
+echo "==> [4/4] Terminating EC2 instance via Terraform (scaling to ${NEW_COUNT} workers)..."
 terraform -chdir="${INFRA_DIR}" apply \
   -var="worker_count=${NEW_COUNT}" \
   -auto-approve

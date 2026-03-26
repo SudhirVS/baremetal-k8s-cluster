@@ -1,12 +1,15 @@
 #!/bin/bash
 # bootstrap-cluster.sh
-# Run this on the control-plane node after Terraform provisioning
+# Run ON the control-plane EC2 instance after Terraform provisioning.
+# The private IP is auto-detected from the EC2 metadata service.
 
 set -euo pipefail
 
-CONTROL_PLANE_IP="192.168.122.10"
+# EC2 metadata — gets the private IP assigned by AWS (used by kubeadm internally)
+CONTROL_PLANE_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 POD_CIDR="10.244.0.0/16"
 
+echo "==> Control plane private IP: ${CONTROL_PLANE_IP}"
 echo "==> Initializing control plane..."
 kubeadm init \
   --apiserver-advertise-address="${CONTROL_PLANE_IP}" \
