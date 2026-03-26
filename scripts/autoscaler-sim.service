@@ -1,0 +1,15 @@
+[Unit]
+Description=Kubernetes Node Autoscaler Simulation
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+ExecStart=/bin/bash /opt/baremetal-k8s-cluster/scripts/autoscaler-sim.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
